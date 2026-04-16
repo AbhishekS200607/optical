@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ateliers | eyepointoptic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --bg:#f4f1ee; --accent:#846a55; --gold:#c5a021; --text:#1a1a1a; --text-soft:#555555; --white:#ffffff; --glass:rgba(255,255,255,0.75); --glass-border:rgba(255,255,255,0.5); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--text); font-family:"Sora",sans-serif; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+    .bg-shape { position:fixed; top:-10%; right:-5%; width:50vw; height:120vh; background:linear-gradient(135deg,#e6e2df 0%,#dcd7d2 100%); border-radius:40% 60% 40% 60%/30% 30% 70% 70%; z-index:-1; filter:blur(60px); animation:morph 20s ease-in-out infinite alternate; }
+    @keyframes morph { 0%{border-radius:40% 60% 40% 60%/30% 30% 70% 70%} 100%{border-radius:60% 40% 60% 40%/70% 70% 30% 30%} }
+    header { padding:40px 60px; display:flex; justify-content:space-between; align-items:center; position:fixed; top:0; width:100%; z-index:100; }
+    .logo { font-size:1.5rem; font-weight:700; letter-spacing:-0.05em; text-transform:lowercase; color:var(--text); text-decoration:none; }
+    nav { display:flex; gap:48px; }
+    nav a { font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.2em; color:var(--text-soft); text-decoration:none; transition:color 0.3s; min-height:44px; display:inline-flex; align-items:center; padding:0 10px; }
+    nav a:hover, nav a.active { color:var(--text); }
+    .icon-link { display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; color:inherit; text-decoration:none; border:none; background:none; cursor:pointer; position:relative; }
+    .cart-badge { position:absolute; top:4px; right:4px; width:16px; height:16px; background:var(--accent); color:#fff; border-radius:50%; font-size:9px; font-weight:700; display:none; align-items:center; justify-content:center; }
+    .hamburger { display:none; flex-direction:column; justify-content:space-between; width:24px; height:18px; background:none; border:none; cursor:pointer; z-index:1100; padding:0; }
+    .hamburger span { display:block; width:100%; height:2px; background:var(--text); transition:all 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .hamburger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+    .hamburger.active span:nth-child(2){opacity:0}
+    .hamburger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+    .mobile-overlay { position:fixed; inset:0; background:var(--bg); z-index:1050; display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; transition:opacity 0.4s,visibility 0.4s; }
+    .mobile-overlay.active { opacity:1; visibility:visible; }
+    .mobile-nav { display:flex; flex-direction:column; gap:32px; text-align:center; }
+    .mobile-nav a { font-size:1.5rem; font-weight:700; text-decoration:none; color:var(--text); text-transform:uppercase; letter-spacing:0.1em; opacity:0; transform:translateY(20px); transition:all 0.4s cubic-bezier(0.2,0.8,0.2,1); }
+    .mobile-overlay.active .mobile-nav a { opacity:1; transform:translateY(0); }
+    .mobile-overlay.active .mobile-nav a:nth-child(1){transition-delay:0.1s}
+    .mobile-overlay.active .mobile-nav a:nth-child(2){transition-delay:0.2s}
+    .mobile-overlay.active .mobile-nav a:nth-child(3){transition-delay:0.3s}
+    .mobile-overlay.active .mobile-nav a:nth-child(4){transition-delay:0.4s}
+
+    .page-wrap { padding:140px 60px 80px; max-width:1200px; margin:0 auto; }
+    .page-eyebrow { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.3em; color:var(--accent); margin-bottom:20px; display:block; }
+    .page-title { font-size:clamp(2.5rem,5vw,4rem); font-weight:800; line-height:1.05; letter-spacing:-0.03em; margin-bottom:16px; }
+    .page-subtitle { font-size:1rem; color:var(--text-soft); line-height:1.7; max-width:520px; margin-bottom:64px; }
+
+    @keyframes slide-up { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Hero atelier */
+    .atelier-hero {
+      display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; margin-bottom:80px;
+      background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--glass-border); border-radius:32px; padding:48px;
+      box-shadow:0 20px 50px rgba(0,0,0,0.05);
+      animation:slide-up 0.8s cubic-bezier(0.2,0.8,0.2,1) both;
+    }
+    .atelier-hero-text .eyebrow { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.3em; color:var(--accent); margin-bottom:16px; display:block; }
+    .atelier-hero-text h2 { font-size:clamp(1.8rem,3vw,2.8rem); font-weight:800; line-height:1.1; letter-spacing:-0.03em; margin-bottom:20px; }
+    .atelier-hero-text p { font-size:0.9rem; color:var(--text-soft); line-height:1.8; margin-bottom:32px; }
+    .btn-outline { display:inline-flex; align-items:center; gap:8px; padding:16px 32px; border:1.5px solid var(--text); border-radius:50px; font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.15em; color:var(--text); text-decoration:none; transition:all 0.3s; }
+    .btn-outline:hover { background:var(--text); color:var(--white); }
+    .atelier-hero-visual { aspect-ratio:4/3; background:linear-gradient(135deg,#e0d8d0,#cfc7be); border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:4rem; font-weight:800; color:rgba(132,106,85,0.2); letter-spacing:-0.05em; }
+
+    /* Locations grid */
+    .section-label { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.3em; color:var(--text-soft); margin-bottom:32px; display:block; }
+    .locations-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-bottom:80px; }
+    .location-card {
+      background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--glass-border); border-radius:24px; padding:32px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.04); cursor:pointer;
+      transition:transform 0.4s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.4s;
+      animation:slide-up 0.8s cubic-bezier(0.2,0.8,0.2,1) both;
+    }
+    .location-card:hover { transform:translateY(-6px); box-shadow:0 20px 50px rgba(0,0,0,0.09); }
+    .location-card:nth-child(1){animation-delay:0.1s}
+    .location-card:nth-child(2){animation-delay:0.2s}
+    .location-card:nth-child(3){animation-delay:0.3s}
+    .location-card:nth-child(4){animation-delay:0.4s}
+    .location-card:nth-child(5){animation-delay:0.5s}
+    .location-card:nth-child(6){animation-delay:0.6s}
+    .location-num { font-size:0.65rem; font-weight:700; color:var(--accent); letter-spacing:0.2em; margin-bottom:16px; display:block; }
+    .location-city { font-size:1.4rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:6px; }
+    .location-country { font-size:0.75rem; color:var(--text-soft); font-weight:600; margin-bottom:20px; }
+    .location-address { font-size:0.8rem; color:var(--text-soft); line-height:1.6; margin-bottom:20px; }
+    .location-hours { font-size:0.7rem; font-weight:600; color:var(--text); text-transform:uppercase; letter-spacing:0.1em; padding-top:16px; border-top:1px solid rgba(0,0,0,0.06); }
+
+    /* Process section */
+    .process-section { margin-bottom:80px; }
+    .process-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+    .process-step {
+      background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--glass-border); border-radius:24px; padding:32px;
+      animation:slide-up 0.8s cubic-bezier(0.2,0.8,0.2,1) both;
+    }
+    .process-step:nth-child(1){animation-delay:0.1s}
+    .process-step:nth-child(2){animation-delay:0.2s}
+    .process-step:nth-child(3){animation-delay:0.3s}
+    .process-step:nth-child(4){animation-delay:0.4s}
+    .step-num { font-size:2.5rem; font-weight:800; color:rgba(132,106,85,0.15); letter-spacing:-0.05em; margin-bottom:16px; line-height:1; }
+    .step-title { font-size:0.95rem; font-weight:700; margin-bottom:10px; }
+    .step-desc { font-size:0.8rem; color:var(--text-soft); line-height:1.7; }
+
+    footer { padding:40px 60px; display:flex; justify-content:space-between; align-items:center; z-index:10; position:relative; }
+
+    @media (max-width:1024px) {
+      header { padding:24px; }
+      nav { display:none; }
+      .hamburger { display:flex; }
+      .page-wrap { padding:120px 24px 60px; }
+      .atelier-hero { grid-template-columns:1fr; padding:32px 24px; }
+      .locations-grid { grid-template-columns:1fr; }
+      .process-grid { grid-template-columns:repeat(2,1fr); }
+      footer { padding:40px 24px; flex-direction:column; gap:24px; }
+    }
+    @media (min-width:640px) and (max-width:1024px) {
+      .locations-grid { grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-shape"></div>
+  <div class="app-container">
+    <header>
+      <a href="index.html" class="logo">eyepointoptic</a>
+      <nav>
+        <a href="glasses.html">Collection</a>
+        <a href="stories.html">Stories</a>
+        <a href="ateliers.html" class="active">Ateliers</a>
+        <a href="support.html">Support</a>
+      </nav>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="icon-link" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+        <a href="cart.html" class="icon-link" aria-label="Cart"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-badge">0</span></a>
+        <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+      </div>
+    </header>
+
+    <div class="mobile-overlay" id="mobileOverlay">
+      <nav class="mobile-nav">
+        <a href="glasses.html">Collection</a>
+        <a href="stories.html">Stories</a>
+        <a href="ateliers.html">Ateliers</a>
+        <a href="support.html">Support</a>
+      </nav>
+    </div>
+
+    <div class="page-wrap">
+      <span class="page-eyebrow">Our Ateliers</span>
+      <h1 class="page-title">Where Craft<br>Meets Vision.</h1>
+      <p class="page-subtitle">Visit one of our ateliers for a personal fitting experience, guided by our expert opticians in a space designed for precision and calm.</p>
+
+      <!-- Hero -->
+      <div class="atelier-hero">
+        <div class="atelier-hero-text">
+          <span class="eyebrow">Flagship Atelier</span>
+          <h2>The Alappuzha<br>Studio</h2>
+          <p>Our flagship atelier is nestled in the heart of Alappuzha — the Venice of the East. A calm, curated space where our master opticians work alongside you to find your perfect frame and fit.</p>
+          <a href="#" class="btn-outline">Book an Appointment →</a>
+        </div>
+        <div class="atelier-hero-visual">EP</div>
+      </div>
+
+      <!-- Locations -->
+      <span class="section-label">All Locations</span>
+      <div class="locations-grid">
+        <div class="location-card">
+          <span class="location-num">01</span>
+          <div class="location-city">Alappuzha</div>
+          <div class="location-country">Kerala, India · Flagship</div>
+          <div class="location-address">MG Road, Mullackal<br>Alappuzha, Kerala 688011</div>
+          <div class="location-hours">Mon–Sat: 10am – 8pm</div>
+        </div>
+        <div class="location-card">
+          <span class="location-num">02</span>
+          <div class="location-city">Kochi</div>
+          <div class="location-country">Kerala, India</div>
+          <div class="location-address">MG Road, Ernakulam<br>Kochi, Kerala 682016</div>
+          <div class="location-hours">Mon–Sat: 10am – 9pm</div>
+        </div>
+        <div class="location-card">
+          <span class="location-num">03</span>
+          <div class="location-city">Thiruvananthapuram</div>
+          <div class="location-country">Kerala, India</div>
+          <div class="location-address">Statue Junction, MG Road<br>Thiruvananthapuram 695001</div>
+          <div class="location-hours">Mon–Sat: 10am – 8pm</div>
+        </div>
+        <div class="location-card">
+          <span class="location-num">04</span>
+          <div class="location-city">Kozhikode</div>
+          <div class="location-country">Kerala, India</div>
+          <div class="location-address">SM Street, Kozhikode<br>Kerala 673001</div>
+          <div class="location-hours">Mon–Sat: 10am – 8pm</div>
+        </div>
+        <div class="location-card">
+          <span class="location-num">05</span>
+          <div class="location-city">Thrissur</div>
+          <div class="location-country">Kerala, India</div>
+          <div class="location-address">Round South, Thrissur<br>Kerala 680001</div>
+          <div class="location-hours">Mon–Sat: 10am – 8pm</div>
+        </div>
+        <div class="location-card">
+          <span class="location-num">06</span>
+          <div class="location-city">Bengaluru</div>
+          <div class="location-country">Karnataka, India</div>
+          <div class="location-address">Brigade Road, Shivajinagar<br>Bengaluru 560001</div>
+          <div class="location-hours">Mon–Sat: 10am – 9pm</div>
+        </div>
+      </div>
+
+      <!-- Process -->
+      <div class="process-section">
+        <span class="section-label">The Atelier Experience</span>
+        <div class="process-grid">
+          <div class="process-step">
+            <div class="step-num">01</div>
+            <div class="step-title">Consultation</div>
+            <div class="step-desc">A one-on-one session with our optician to understand your vision needs, lifestyle, and aesthetic preferences.</div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">02</div>
+            <div class="step-title">Frame Selection</div>
+            <div class="step-desc">Browse our full collection in-person. Try every frame. Take your time. Our team is here to guide, not rush.</div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">03</div>
+            <div class="step-title">Precision Fitting</div>
+            <div class="step-desc">Every frame is adjusted to your exact facial geometry using our proprietary fitting tools and techniques.</div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">04</div>
+            <div class="step-title">Lens Crafting</div>
+            <div class="step-desc">Your lenses are cut and fitted in-house, with a typical turnaround of 48–72 hours for standard prescriptions.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div style="display:flex;gap:16px;">
+        <a href="#" class="icon-link" style="color:var(--text-soft);font-size:0.7rem;font-weight:600;letter-spacing:0.1em;width:auto;min-width:44px;padding:0 10px;">Instagram</a>
+        <a href="#" class="icon-link" style="color:var(--text-soft);font-size:0.7rem;font-weight:600;letter-spacing:0.1em;width:auto;min-width:44px;padding:0 10px;">Vimeo</a>
+      </div>
+      <div style="font-size:0.65rem;font-weight:600;color:var(--text-soft);">© 2026 EYEPOINTOPTIC · Alappuzha, Kerala, India</div>
+    </footer>
+  </div>
+
+  <script src="cart.js"></script>
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburgerBtn').classList.toggle('active');
+      document.getElementById('mobileOverlay').classList.toggle('active');
+      document.body.style.overflow = document.getElementById('mobileOverlay').classList.contains('active') ? 'hidden' : '';
+    }
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('hamburgerBtn').classList.remove('active');
+        document.getElementById('mobileOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  </script>
+</body>
+</html>

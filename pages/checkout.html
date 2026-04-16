@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | eyepointoptic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f1ee;
+      --accent: #846a55;
+      --gold: #c5a021;
+      --text: #1a1a1a;
+      --text-soft: #555555;
+      --white: #ffffff;
+      --glass: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: "Sora", sans-serif; -webkit-font-smoothing: antialiased; }
+    
+    .bg-shape { position: fixed; top: -10%; right: -5%; width: 50vw; height: 120vh; background: linear-gradient(135deg, #e6e2df 0%, #dcd7d2 100%); border-radius: 40% 60% 40% 60% / 30% 30% 70% 70%; z-index: -1; filter: blur(60px); }
+
+    header { padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; width: 100%; z-index: 100; }
+    .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.05em; text-transform: lowercase; color: var(--text); text-decoration: none; }
+
+    .page-wrap { padding: 120px 60px 80px; max-width: 900px; margin: 0 auto; }
+    .page-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 40px; text-align: center; }
+
+    .checkout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+
+    .checkout-form {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group { margin-bottom: 24px; }
+    label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-soft); margin-bottom: 10px; }
+    input, textarea, select {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 14px;
+      font-family: "Sora", sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: all 0.3s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      background: var(--white);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(132, 106, 85, 0.1);
+    }
+
+    .delivery-options { display: flex; gap: 15px; margin-bottom: 24px; }
+    .delivery-option {
+      flex: 1;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .delivery-option.active {
+      background: var(--text);
+      color: var(--white);
+      border-color: var(--text);
+    }
+
+    .order-summary {
+      background: var(--white);
+      border-radius: 28px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    }
+    .summary-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-soft); margin-bottom: 24px; border-bottom: 1px solid #eee; padding-bottom: 12px; }
+    .summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.85rem; }
+    .summary-item .name { font-weight: 500; color: var(--text-soft); }
+    .summary-item .val { font-weight: 700; }
+    .summary-total { margin-top: 24px; padding-top: 20px; border-top: 2px solid #f4f4f4; display: flex; justify-content: space-between; align-items: center; }
+    .total-label { font-weight: 600; font-size: 0.9rem; }
+    .total-val { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
+
+    .btn-complete {
+      width: 100%;
+      padding: 22px;
+      background: #25D366; /* WhatsApp Green */
+      color: white;
+      border: none;
+      border-radius: 18px;
+      font-family: "Sora", sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.3s;
+      margin-top: 30px;
+    }
+    .btn-complete:hover { background: #1ebd5b; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
+
+    @media (max-width: 1024px) {
+      header { padding: 20px 24px; }
+      .page-wrap { padding: 100px 24px 60px; }
+      .checkout-grid { grid-template-columns: 1fr; }
+      .checkout-form { order: 1; padding: 30px 24px; }
+      .order-summary { order: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-shape"></div>
+  <header>
+    <a href="index.html" class="logo">eyepointoptic</a>
+  </header>
+
+  <div class="page-wrap">
+    <h1 class="page-title">Finalize Your Order</h1>
+    
+    <div class="checkout-grid">
+      <div class="checkout-form">
+        <div class="form-group">
+          <label>Delivery Method</label>
+          <div class="delivery-options" id="deliveryMethods">
+            <div class="delivery-option active" onclick="setDelivery('Home Delivery')">Home Delivery</div>
+            <div class="delivery-option" onclick="setDelivery('In-Store Pickup')">In-Store Pickup</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Lens Power (Right/Left Eye)</label>
+          <input type="text" id="power" placeholder="e.g. R: -1.50, L: -1.25 (If applicable)">
+        </div>
+
+        <div class="form-group" id="addressGroup">
+          <label>Delivery Address</label>
+          <textarea id="address" rows="3" placeholder="Street, Building, Flat No."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Pincode</label>
+          <input type="text" id="pincode" placeholder="6-digit Pincode">
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" placeholder="WhatsApp preferred">
+        </div>
+
+        <div class="form-group">
+          <label>Alternate Number (Optional)</label>
+          <input type="tel" id="altPhone" placeholder="Another contact">
+        </div>
+
+        <button class="btn-complete" onclick="sendOrder()">
+          <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.539 2.016 2.126-.54c1.029.59 2.067.928 3.16.929h.002c3.181 0 5.766-2.587 5.768-5.766 0-3.18-2.587-5.766-5.769-5.766zm2.82 9.035c-.17.401-.849.736-1.168.78-.291.039-.533.093-1.847-.47-1.503-.642-2.457-2.18-2.531-2.281-.074-.101-.581-.772-.581-1.47 0-.699.366-1.042.496-1.185.127-.143.279-.179.373-.179l.267.006c.092.003.215-.033.337.253.127.298.435.96.473 1.035.038.075.063.164.013.265-.05.101-.076.164-.152.253-.076.088-.16.197-.229.264-.078.077-.16.16-.07.297.089.138.396.65.852 1.056.586.52 1.077.683 1.233.774.156.091.247.076.34-.029.093-.105.4-.467.508-.626.108-.159.215-.133.363-.079.148.054.939.444 1.101.525.161.082.269.123.307.189.038.066.038.384-.132.785z"/></svg>
+          Complete via WhatsApp
+        </button>
+      </div>
+
+      <div class="order-summary">
+        <div class="summary-title">Order Items</div>
+        <div id="summaryItems">
+          <!-- JS dynamic -->
+        </div>
+        <div class="summary-total">
+          <span class="total-label">Total Amount</span>
+          <span class="total-val" id="totalDisplay">Rs. 0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="cart.js"></script>
+  <script>
+    let deliveryMethod = 'Home Delivery';
+
+    function setDelivery(method) {
+      deliveryMethod = method;
+      const options = document.querySelectorAll('.delivery-option');
+      options.forEach(opt => {
+        opt.classList.toggle('active', opt.textContent === method);
+      });
+      
+      const addressGroup = document.getElementById('addressGroup');
+      if (method === 'In-Store Pickup') {
+        addressGroup.style.opacity = '0.4';
+        addressGroup.style.pointerEvents = 'none';
+        document.getElementById('address').value = 'Pickup from Store';
+      } else {
+        addressGroup.style.opacity = '1';
+        addressGroup.style.pointerEvents = 'auto';
+        document.getElementById('address').value = '';
+      }
+    }
+
+    function renderSummary() {
+      const cart = getCart();
+      const container = document.getElementById('summaryItems');
+      const totalDisplay = document.getElementById('totalDisplay');
+      
+      if (cart.length === 0) {
+        window.location.href = 'cart.html';
+        return;
+      }
+
+      container.innerHTML = '';
+      cart.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'summary-item';
+        div.innerHTML = `<span class="name">${item.name} x${item.qty || 1}</span><span class="val">${item.price}</span>`;
+        container.appendChild(div);
+      });
+
+      const subtotal = getCartTotal();
+      const tax = Math.round(subtotal * 0.18);
+      totalDisplay.textContent = `Rs. ${subtotal + tax}`;
+    }
+
+    function sendOrder() {
+      const cart = getCart();
+      const power = document.getElementById('power').value;
+      const address = document.getElementById('address').value;
+      const pincode = document.getElementById('pincode').value;
+      const phone = document.getElementById('phone').value;
+      const altPhone = document.getElementById('altPhone').value;
+
+      if (deliveryMethod === 'Home Delivery' && !address) {
+        alert("Please provide a delivery address.");
+        return;
+      }
+      if (!pincode || !phone) {
+        alert("Pincode and Phone Number are required.");
+        return;
+      }
+
+      const total = document.getElementById('totalDisplay').textContent;
+      const OWNER_PHONE = "919605210198";
+
+      let message = "*NEW EYEPOINT OPTIC ORDER*%0A";
+      message += "--------------------------%0A";
+      message += `*Method:* ${deliveryMethod}%0A%0A`;
+      
+      message += "*Items:*%0A";
+      cart.forEach(item => {
+        message += `• ${item.name} (x${item.qty || 1}) - ${item.price}%0A`;
+      });
+      
+      message += `%0A*Total Amount:* ${total}%0A`;
+      message += "--------------------------%0A";
+      message += `*Lens Power:* ${power || 'N/A'}%0A`;
+      message += `*Address:* ${address}%0A`;
+      message += `*Pincode:* ${pincode}%0A`;
+      message += `*Phone:* ${phone}%0A`;
+      if (altPhone) message += `*Alt Phone:* ${altPhone}%0A`;
+
+      const whatsappUrl = `https://wa.me/${OWNER_PHONE}?text=${message}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    renderSummary();
+  </script>
+</body>
+</html>

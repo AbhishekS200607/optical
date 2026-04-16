@@ -108,10 +108,29 @@
       color: var(--text-soft);
       text-decoration: none;
       transition: color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 10px;
     }
 
     nav a:hover {
       color: var(--text);
+    }
+
+    .icon-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      color: inherit;
+      text-decoration: none;
+      border: none;
+      background: none;
+      cursor: pointer;
     }
 
     main {
@@ -279,53 +298,64 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 1024px) {
-      header { padding: 24px; }
-      nav { display: none; }
-      main { grid-template-columns: 1fr; padding-top: 80px; height: auto; }
-      .product-details { padding: 20px 24px 60px; order: 2; }
-      .product-card { max-width: 100%; padding: 32px 24px; margin-top: -40px; }
-      .visual-side { height: 60vh; order: 1; }
-      .mobile-controls { display: flex; }
-      .slider-controls { display: none; }
-      .model-image { height: 90%; }
-      .hero-watermark { font-size: 30vw; top: 25%; }
-      footer { padding: 40px 24px; flex-direction: column; gap: 32px; }
-      
-      .hamburger {
-        display: block;
-      }
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text);
+      color: var(--white);
+      padding: 16px 32px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      z-index: 2000;
+      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s;
+      opacity: 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
 
     /* Hamburger Menu Styles */
     .hamburger {
       display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
       background: none;
       border: none;
       cursor: pointer;
       z-index: 1100;
       padding: 0;
-      color: var(--text);
     }
 
-    .hamburger svg line {
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: var(--text);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      transform-origin: center;
     }
 
-    .hamburger.active .line-middle {
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
       opacity: 0;
     }
 
-    .hamburger.active .line-top {
-      transform: translateY(6px) rotate(45deg);
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
     }
 
-    .hamburger.active .line-bottom {
-      transform: translateY(-6px) rotate(-45deg);
-    }
-
-    .mobile-menu {
+    .mobile-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -337,13 +367,13 @@
       align-items: center;
       justify-content: center;
       opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
-    .mobile-menu.active {
+    .mobile-overlay.active {
       opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
     }
 
     .mobile-nav {
@@ -365,15 +395,33 @@
       transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    .mobile-menu.active .mobile-nav a {
+    .mobile-overlay.active .mobile-nav a {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .mobile-menu.active .mobile-nav a:nth-child(1) { transition-delay: 0.1s; }
-    .mobile-menu.active .mobile-nav a:nth-child(2) { transition-delay: 0.2s; }
-    .mobile-menu.active .mobile-nav a:nth-child(3) { transition-delay: 0.3s; }
-    .mobile-menu.active .mobile-nav a:nth-child(4) { transition-delay: 0.4s; }
+    .mobile-overlay.active .mobile-nav a:nth-child(1) { transition-delay: 0.1s; }
+    .mobile-overlay.active .mobile-nav a:nth-child(2) { transition-delay: 0.2s; }
+    .mobile-overlay.active .mobile-nav a:nth-child(3) { transition-delay: 0.3s; }
+    .mobile-overlay.active .mobile-nav a:nth-child(4) { transition-delay: 0.4s; }
+
+    @media (max-width: 1024px) {
+      header { padding: 24px; }
+      nav { display: none; }
+      main { grid-template-columns: 1fr; padding-top: 80px; height: auto; }
+      .product-details { padding: 20px 24px 60px; order: 2; }
+      .product-card { max-width: 100%; padding: 32px 24px; margin-top: -40px; }
+      .visual-side { height: 60vh; order: 1; }
+      .mobile-controls { display: flex; }
+      .slider-controls { display: none; }
+      .model-image { height: 90%; }
+      .hero-watermark { font-size: 30vw; top: 25%; }
+      footer { padding: 40px 24px; flex-direction: column; gap: 32px; }
+      
+      .hamburger {
+        display: flex;
+      }
+    }
   </style>
 </head>
 <body>
@@ -386,31 +434,31 @@
       
       <nav>
         <a href="glasses.html">Collection</a>
-        <a href="#">Stories</a>
-        <a href="#">Ateliers</a>
-        <a href="#">Support</a>
+        <a href="stories.html">Stories</a>
+        <a href="ateliers.html">Ateliers</a>
+        <a href="support.html">Support</a>
       </nav>
 
-      <div style="display: flex; gap: 24px; align-items: center;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button class="icon-link" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+        <a href="cart.html" class="icon-link" aria-label="Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        </a>
         
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12" class="line-middle"></line>
-            <line x1="3" y1="6" x2="21" y2="6" class="line-top"></line>
-            <line x1="3" y1="18" x2="21" y2="18" class="line-bottom"></line>
-          </svg>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menu" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
         </button>
       </div>
     </header>
 
-    <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-overlay" id="mobileOverlay">
       <nav class="mobile-nav">
         <a href="glasses.html">Collection</a>
-        <a href="#">Stories</a>
-        <a href="#">Ateliers</a>
-        <a href="#">Support</a>
+        <a href="stories.html">Stories</a>
+        <a href="ateliers.html">Ateliers</a>
+        <a href="support.html">Support</a>
       </nav>
     </div>
 
@@ -428,7 +476,7 @@
           </p>
           
           <div class="cta-row">
-            <button class="btn-primary">Add to Bag</button>
+            <button class="btn-primary" onclick="addToCart()">Add to Bag</button>
           </div>
 
           <div class="slider-controls">
@@ -456,15 +504,25 @@
     </main>
 
     <footer style="padding: 40px 60px; display: flex; justify-content: space-between; align-items: center; z-index: 10;">
-      <div style="display: flex; gap: 32px;">
-        <a href="#" style="color: var(--text-soft); text-decoration: none; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;">Instagram</a>
-        <a href="#" style="color: var(--text-soft); text-decoration: none; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;">Vimeo</a>
+      <div style="display: flex; gap: 16px;">
+        <a href="#" class="icon-link" style="color: var(--text-soft); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; width: auto; min-width: 44px; padding: 0 10px;">Instagram</a>
+        <a href="#" class="icon-link" style="color: var(--text-soft); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; width: auto; min-width: 44px; padding: 0 10px;">Vimeo</a>
       </div>
-      <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-soft);">© 2026 EYEPONTOPTIC</div>
+      <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-soft);">© 2026 EYEPOINTOPTIC · Alappuzha, Kerala, India</div>
     </footer>
   </div>
 
   <script>
+    // Clear old cart data if format is outdated
+    (function() {
+      const cart = JSON.parse(localStorage.getItem('eyepointCart')) || [];
+      const isOldFormat = cart.some(item => !item.price || !item.price.includes('Rs. '));
+      if (isOldFormat && cart.length > 0) {
+        localStorage.removeItem('eyepointCart');
+        console.log('Old cart data cleared');
+      }
+    })();
+
     const products = [
       {
         title: "Leopard Print<br>Round Series",
@@ -567,23 +625,52 @@
     }
 
     // Mobile Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
+    function toggleMenu() {
+      const btn = document.getElementById('hamburgerBtn');
+      const overlay = document.getElementById('mobileOverlay');
+      if (btn && overlay) {
+        btn.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : '';
+      }
+    }
 
-    if (hamburger && mobileMenu) {
-      hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    // Close menu when clicking links
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        const btn = document.getElementById('hamburgerBtn');
+        const overlay = document.getElementById('mobileOverlay');
+        btn.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
       });
+    });
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
       
-      mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          hamburger.classList.remove('active');
-          mobileMenu.classList.remove('active');
-          document.body.style.overflow = '';
-        });
+      setTimeout(() => toast.classList.add('show'), 100);
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 600);
+      }, 3000);
+    }
+
+    function addToCart() {
+      const p = products[currentIdx];
+      const cart = JSON.parse(localStorage.getItem('eyepointCart')) || [];
+      cart.push({
+        name: p.title.replace('<br>', ' '),
+        price: p.price,
+        image: p.image,
+        category: 'Frame'
       });
+      localStorage.setItem('eyepointCart', JSON.stringify(cart));
+      showToast('Added to Bag!');
     }
   </script>
 </body>

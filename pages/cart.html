@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Bag | eyepointoptic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --bg:#f4f1ee; --accent:#846a55; --gold:#c5a021; --text:#1a1a1a; --text-soft:#555555; --white:#ffffff; --glass:rgba(255,255,255,0.75); --glass-border:rgba(255,255,255,0.5); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--text); font-family:"Sora",sans-serif; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+    .bg-shape { position:fixed; top:-10%; right:-5%; width:50vw; height:120vh; background:linear-gradient(135deg,#e6e2df 0%,#dcd7d2 100%); border-radius:40% 60% 40% 60%/30% 30% 70% 70%; z-index:-1; filter:blur(60px); animation:morph 20s ease-in-out infinite alternate; }
+    @keyframes morph { 0%{border-radius:40% 60% 40% 60%/30% 30% 70% 70%} 100%{border-radius:60% 40% 60% 40%/70% 70% 30% 30%} }
+
+    header { padding:40px 60px; display:flex; justify-content:space-between; align-items:center; position:fixed; top:0; width:100%; z-index:100; }
+    .logo { font-size:1.5rem; font-weight:700; letter-spacing:-0.05em; text-transform:lowercase; color:var(--text); text-decoration:none; }
+    nav { display:flex; gap:48px; }
+    nav a { font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.2em; color:var(--text-soft); text-decoration:none; transition:color 0.3s; min-height:44px; display:inline-flex; align-items:center; padding:0 10px; }
+    nav a:hover { color:var(--text); }
+    .icon-link { position:relative; display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; color:inherit; text-decoration:none; border:none; background:none; cursor:pointer; }
+    .cart-badge { position:absolute; top:4px; right:4px; width:16px; height:16px; background:var(--accent); color:#fff; border-radius:50%; font-size:9px; font-weight:700; display:none; align-items:center; justify-content:center; }
+
+    .hamburger { display:none; flex-direction:column; justify-content:space-between; width:24px; height:18px; background:none; border:none; cursor:pointer; z-index:1100; padding:0; }
+    .hamburger span { display:block; width:100%; height:2px; background:var(--text); transition:all 0.3s; }
+    .hamburger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+    .hamburger.active span:nth-child(2){opacity:0}
+    .hamburger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+    .mobile-overlay { position:fixed; inset:0; background:var(--bg); z-index:1050; display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; transition:opacity 0.4s,visibility 0.4s; }
+    .mobile-overlay.active { opacity:1; visibility:visible; }
+    .mobile-nav { display:flex; flex-direction:column; gap:32px; text-align:center; }
+    .mobile-nav a { font-size:1.5rem; font-weight:700; text-decoration:none; color:var(--text); text-transform:uppercase; letter-spacing:0.1em; opacity:0; transform:translateY(20px); transition:all 0.4s cubic-bezier(0.2,0.8,0.2,1); }
+    .mobile-overlay.active .mobile-nav a { opacity:1; transform:translateY(0); }
+    .mobile-overlay.active .mobile-nav a:nth-child(1){transition-delay:0.1s}
+    .mobile-overlay.active .mobile-nav a:nth-child(2){transition-delay:0.2s}
+    .mobile-overlay.active .mobile-nav a:nth-child(3){transition-delay:0.3s}
+    .mobile-overlay.active .mobile-nav a:nth-child(4){transition-delay:0.4s}
+
+    @keyframes slide-up { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    .page-wrap { padding:140px 60px 80px; max-width:1100px; margin:0 auto; }
+    .page-eyebrow { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.3em; color:var(--accent); margin-bottom:16px; display:block; }
+    .page-title { font-size:clamp(2rem,4vw,3.5rem); font-weight:800; line-height:1.05; letter-spacing:-0.03em; margin-bottom:48px; }
+
+    /* Cart layout */
+    .cart-layout { display:grid; grid-template-columns:1fr 360px; gap:32px; align-items:start; }
+
+    /* Cart items */
+    .cart-items { display:flex; flex-direction:column; gap:16px; }
+    .cart-item {
+      background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--glass-border); border-radius:24px; padding:24px;
+      display:flex; gap:20px; align-items:center;
+      animation:slide-up 0.5s cubic-bezier(0.2,0.8,0.2,1) both;
+      box-shadow:0 4px 20px rgba(0,0,0,0.04);
+    }
+    .cart-item-img { width:90px; height:70px; object-fit:contain; mix-blend-mode:multiply; flex-shrink:0; }
+    .cart-item-img-placeholder { width:90px; height:70px; background:rgba(132,106,85,0.08); border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:800; color:rgba(132,106,85,0.2); }
+    .cart-item-info { flex:1; }
+    .cart-item-name { font-size:0.95rem; font-weight:700; margin-bottom:4px; }
+    .cart-item-cat { font-size:0.65rem; font-weight:600; text-transform:uppercase; letter-spacing:0.2em; color:var(--text-soft); margin-bottom:12px; }
+    .qty-row { display:flex; align-items:center; gap:12px; }
+    .qty-btn { width:28px; height:28px; border:1px solid rgba(0,0,0,0.12); background:var(--white); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; font-weight:600; transition:all 0.2s; }
+    .qty-btn:hover { background:var(--text); color:var(--white); border-color:var(--text); }
+    .qty-num { font-size:0.9rem; font-weight:700; min-width:20px; text-align:center; }
+    .cart-item-price { font-size:1rem; font-weight:700; color:var(--gold); flex-shrink:0; }
+    .remove-btn { width:32px; height:32px; border:none; background:rgba(0,0,0,0.05); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; flex-shrink:0; }
+    .remove-btn:hover { background:#fee2e2; }
+
+    /* Empty state */
+    .empty-cart { text-align:center; padding:80px 40px; background:var(--glass); backdrop-filter:blur(20px); border:1px solid var(--glass-border); border-radius:28px; animation:slide-up 0.5s both; }
+    .empty-icon { font-size:3rem; margin-bottom:20px; }
+    .empty-title { font-size:1.3rem; font-weight:700; margin-bottom:10px; }
+    .empty-desc { font-size:0.88rem; color:var(--text-soft); margin-bottom:32px; }
+    .btn-shop { display:inline-flex; align-items:center; gap:8px; padding:16px 32px; background:var(--text); color:var(--white); border:none; border-radius:50px; font-family:"Sora",sans-serif; font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; cursor:pointer; text-decoration:none; transition:all 0.3s; }
+    .btn-shop:hover { background:#000; transform:translateY(-2px); }
+
+    /* Order summary */
+    .order-summary {
+      background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--glass-border); border-radius:28px; padding:36px;
+      box-shadow:0 20px 50px rgba(0,0,0,0.05);
+      position:sticky; top:120px;
+      animation:slide-up 0.6s 0.1s cubic-bezier(0.2,0.8,0.2,1) both;
+    }
+    .summary-title { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.3em; color:var(--text-soft); margin-bottom:28px; }
+    .summary-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:0.88rem; }
+    .summary-row.total { font-size:1.1rem; font-weight:800; padding-top:20px; border-top:1px solid rgba(0,0,0,0.08); margin-top:8px; }
+    .summary-label { color:var(--text-soft); font-weight:500; }
+    .summary-value { font-weight:700; }
+    .summary-value.gold { color:var(--gold); }
+    .btn-checkout { width:100%; padding:20px; background:var(--text); color:var(--white); border:none; border-radius:16px; font-family:"Sora",sans-serif; font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; cursor:pointer; transition:all 0.3s; margin-top:24px; }
+    .btn-checkout:hover { background:#000; transform:translateY(-2px); }
+    .btn-clear { width:100%; padding:14px; background:transparent; color:var(--text-soft); border:1px solid rgba(0,0,0,0.1); border-radius:16px; font-family:"Sora",sans-serif; font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; transition:all 0.3s; margin-top:10px; }
+    .btn-clear:hover { border-color:var(--text); color:var(--text); }
+    .secure-note { display:flex; align-items:center; gap:8px; margin-top:20px; font-size:0.7rem; color:var(--text-soft); justify-content:center; }
+
+    footer { padding:40px 60px; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:10; }
+
+    @media (max-width:1024px) {
+      header { padding:24px; }
+      nav { display:none; }
+      .hamburger { display:flex; }
+      .page-wrap { padding:110px 24px 60px; }
+      .cart-layout { grid-template-columns:1fr; }
+      .order-summary { position:static; }
+      footer { padding:40px 24px; flex-direction:column; gap:24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-shape"></div>
+
+  <header>
+    <a href="index.html" class="logo">eyepointoptic</a>
+    <nav>
+      <a href="glasses.html">Collection</a>
+      <a href="stories.html">Stories</a>
+      <a href="ateliers.html">Ateliers</a>
+      <a href="support.html">Support</a>
+    </nav>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="icon-link" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <a href="cart.html" class="icon-link" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge">0</span>
+      </a>
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <div class="mobile-overlay" id="mobileOverlay">
+    <nav class="mobile-nav">
+      <a href="glasses.html">Collection</a>
+      <a href="stories.html">Stories</a>
+      <a href="ateliers.html">Ateliers</a>
+      <a href="support.html">Support</a>
+    </nav>
+  </div>
+
+  <div class="page-wrap">
+    <span class="page-eyebrow">Your Bag</span>
+    <h1 class="page-title" id="cartTitle">Your Bag</h1>
+    <div class="cart-layout">
+      <div class="cart-items" id="cartItems"></div>
+      <div class="order-summary" id="orderSummary" style="display:none;">
+        <div class="summary-title">Order Summary</div>
+        <div class="summary-row"><span class="summary-label">Subtotal</span><span class="summary-value" id="subtotal">Rs. 0</span></div>
+        <div class="summary-row"><span class="summary-label">Shipping</span><span class="summary-value">Free</span></div>
+        <div class="summary-row"><span class="summary-label">Tax (GST 18%)</span><span class="summary-value" id="tax">Rs. 0</span></div>
+        <div class="summary-row total"><span>Total</span><span class="summary-value gold" id="total">Rs. 0</span></div>
+        <button class="btn-checkout" onclick="checkout()">Proceed to Checkout</button>
+        <button class="btn-clear" onclick="clearAll()">Clear Bag</button>
+        <div class="secure-note">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Secure checkout · SSL encrypted
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div style="display:flex;gap:16px;">
+      <a href="#" style="color:var(--text-soft);font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-decoration:none;">Instagram</a>
+      <a href="#" style="color:var(--text-soft);font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-decoration:none;">Vimeo</a>
+    </div>
+    <div style="font-size:0.65rem;font-weight:600;color:var(--text-soft);">© 2026 EYEPOINTOPTIC · Alappuzha, Kerala, India</div>
+  </footer>
+
+  <script src="cart.js"></script>
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburgerBtn').classList.toggle('active');
+      document.getElementById('mobileOverlay').classList.toggle('active');
+      document.body.style.overflow = document.getElementById('mobileOverlay').classList.contains('active') ? 'hidden' : '';
+    }
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('hamburgerBtn').classList.remove('active');
+        document.getElementById('mobileOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    function renderCart() {
+      const cart = getCart();
+      const container = document.getElementById('cartItems');
+      const summary = document.getElementById('orderSummary');
+      const title = document.getElementById('cartTitle');
+      container.innerHTML = '';
+
+      if (cart.length === 0) {
+        title.textContent = 'Your Bag is Empty';
+        summary.style.display = 'none';
+        container.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-icon">🛍️</div>
+            <div class="empty-title">Nothing here yet</div>
+            <div class="empty-desc">Browse our collection and add your favourite frames.</div>
+            <a href="index.html" class="btn-shop">Shop Now →</a>
+          </div>`;
+        return;
+      }
+
+      title.textContent = `Your Bag (${getCartCount()})`;
+      summary.style.display = 'block';
+
+      cart.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.style.animationDelay = `${i * 0.08}s`;
+        const priceNum = parseInt((item.price || '0').replace(/[^0-9]/g, ''));
+        div.innerHTML = `
+          ${item.image
+            ? `<img src="${item.image}" alt="${item.name}" class="cart-item-img" onerror="this.style.display='none'">`
+            : `<div class="cart-item-img-placeholder">EP</div>`}
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-cat">${item.category || 'Eyewear'}</div>
+            <div class="qty-row">
+              <button class="qty-btn" onclick="changeQty(${i}, -1)">−</button>
+              <span class="qty-num">${item.qty || 1}</span>
+              <button class="qty-btn" onclick="changeQty(${i}, 1)">+</button>
+            </div>
+          </div>
+          <div class="cart-item-price">Rs. ${priceNum * (item.qty || 1)}</div>
+          <button class="remove-btn" onclick="removeItem(${i})" title="Remove">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>`;
+        container.appendChild(div);
+      });
+
+      const subtotal = getCartTotal();
+      const tax = Math.round(subtotal * 0.18);
+      document.getElementById('subtotal').textContent = `Rs. ${subtotal}`;
+      document.getElementById('tax').textContent = `Rs. ${tax}`;
+      document.getElementById('total').textContent = `Rs. ${subtotal + tax}`;
+    }
+
+    function changeQty(index, delta) {
+      const cart = getCart();
+      cart[index].qty = Math.max(1, (cart[index].qty || 1) + delta);
+      saveCart(cart);
+      updateCartBadge();
+      renderCart();
+    }
+
+    function removeItem(index) {
+      removeFromCart(index);
+      renderCart();
+    }
+
+    function clearAll() {
+      if (confirm('Clear your entire bag?')) {
+        clearCart();
+        renderCart();
+      }
+    }
+
+    function checkout() {
+      window.location.href = 'checkout.html';
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

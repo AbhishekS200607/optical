@@ -19,11 +19,7 @@
       --bar-shadow: 0 16px 35px rgba(0, 0, 0, 0.05);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
@@ -37,21 +33,21 @@
       position: relative;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(140deg, #f0f4f8 0%, var(--panel) 45%, #e0e8f0 100%);
+      height: 100dvh;
       overflow: hidden;
-      animation: card-in 0.8s ease both;
       isolation: isolate;
     }
 
+    /* Fixed Header */
     .top-row {
-      position: absolute;
+      position: fixed;
       left: 30px;
-      right: 28px;
+      right: 30px;
       top: 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      z-index: 5;
+      z-index: 100;
     }
 
     .logo {
@@ -59,32 +55,146 @@
       font-size: 2.15rem;
       font-weight: 600;
       text-transform: lowercase;
-      line-height: 1;
+      text-decoration: none;
+      color: inherit;
     }
 
+    .header-right { display: flex; gap: 20px; align-items: center; }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text);
+      color: var(--white);
+      padding: 16px 32px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      z-index: 2000;
+      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s;
+      opacity: 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Hamburger Menu Styles */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1100;
+      padding: 0;
+    }
+    .hamburger span { display: block; width: 100%; height: 2px; background-color: var(--text); transition: 0.3s; }
+    .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.4s;
+    }
+    .mobile-overlay.active { opacity: 1; visibility: visible; }
+    .mobile-overlay a { font-size: 2rem; font-weight: 700; text-decoration: none; color: var(--text); text-transform: uppercase; }
+
+    /* Product Details Overlay */
+    .details-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      padding: 60px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+      overflow-y: auto;
+    }
+    .details-overlay.active { opacity: 1; visibility: visible; }
+    .details-close {
+      position: absolute; top: 30px; right: 30px; width: 44px; height: 44px;
+      display: grid; place-items: center; cursor: pointer; background: rgba(0,0,0,0.05); border-radius: 50%;
+    }
+    .details-content { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .details-image svg { width: 100%; height: auto; }
+    .details-info h2 { font-size: 3rem; font-weight: 800; margin-bottom: 20px; }
+    .details-info .price { font-size: 1.5rem; font-weight: 600; margin-bottom: 30px; display: block; }
+    .details-info p { font-size: 1rem; line-height: 1.8; color: var(--text-soft); margin-bottom: 40px; }
+    
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 30px; }
+    .spec-item label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 8px; }
+    .spec-item span { font-size: 0.9rem; font-weight: 600; }
+
+    /* Side Nav */
     .side-nav {
       position: absolute;
       left: 30px;
       top: 222px;
       display: grid;
-      gap: 12px;
+      gap: 15px;
       z-index: 5;
     }
-
     .side-nav a {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.73rem;
+      font-size: 0.8rem;
       letter-spacing: 0.1em;
       font-weight: 500;
-      transition: color 0.25s ease;
+      transition: 0.25s;
     }
+    .side-nav a.active { color: var(--text); font-weight: 600; }
 
-    .side-nav a.active {
-      color: var(--text);
+    /* Slide/Grid Toggle */
+    .view-toggle {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 101;
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 999px;
+      padding: 4px;
+      backdrop-filter: blur(8px);
+    }
+    .toggle-btn {
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.75rem;
       font-weight: 600;
+      padding: 10px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.2s;
     }
+    .toggle-btn.active { background: var(--text); color: var(--white); }
 
+    /* Hero */
     .hero {
       height: 100%;
       width: 100%;
@@ -92,200 +202,145 @@
       place-items: center;
       position: relative;
     }
-
     .hero-copy {
       position: absolute;
       top: 46%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: clamp(3rem, 10vw, 8rem);
+      font-size: clamp(3rem, 12vw, 9rem);
       letter-spacing: 0.15em;
       color: rgba(255, 255, 255, 0.5);
       font-weight: 800;
       white-space: nowrap;
       z-index: 1;
     }
+    .product-wrap { z-index: 4; }
 
-    .product-wrap {
-      z-index: 4;
-      animation: product-in 1s ease both;
-    }
-
+    /* Bottom Bar */
     .bottom-bar {
       position: absolute;
       left: 50%;
-      bottom: 20px;
+      bottom: 0;
       transform: translateX(-50%);
-      width: min(900px, 90vw);
-      height: 80px;
+      width: min(940px, 100% - 40px);
+      height: 84px;
       background: var(--white);
       box-shadow: var(--bar-shadow);
-      display: flex;
-      align-items: center;
-      padding: 0 40px;
-      border-radius: 40px;
-      z-index: 8;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1.2fr 1.3fr;
+      z-index: 10;
     }
-
-    .product-name {
-      font-size: 1.4rem;
-      font-weight: 600;
-    }
-
-    .price {
-      margin-left: auto;
-      font-weight: 600;
-      color: var(--text-soft);
-    }
-
-    .add-cart {
-      margin-left: 40px;
-      padding: 12px 30px;
-      background: var(--text);
-      color: var(--white);
-      border: none;
-      border-radius: 25px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    @keyframes card-in {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes product-in {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    @media (max-width: 1024px) {
-      .side-nav {
-        display: none;
-      }
-      
-      .hamburger {
-        display: block;
-      }
-      
-      .top-row {
-        left: 20px;
-        right: 20px;
-        top: 20px;
-      }
-    }
-
-    /* Hamburger Menu Styles */
-    .hamburger {
-      display: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      z-index: 1100;
-      padding: 0;
-      color: var(--text);
-    }
-
-    .hamburger svg line {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      transform-origin: center;
-    }
-
-    .hamburger.active .line-middle {
-      opacity: 0;
-    }
-
-    .hamburger.active .line-top {
-      transform: translateY(6px) rotate(45deg);
-    }
-
-    .hamburger.active .line-bottom {
-      transform: translateY(-6px) rotate(-45deg);
-    }
-
-    .mobile-menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--panel);
-      z-index: 1050;
+    .bar-block {
+      border-right: 1px solid #eee;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
+      padding: 0 20px;
+      gap: 10px;
+    }
+    .bar-block:last-child { border-right: none; }
+    .product-name { font-size: 1.5rem; font-weight: 600; }
+    .price { font-size: 0.9rem; color: var(--text-soft); }
+    
+    .btn-details {
+      background: transparent; border: none; font: inherit; font-size: 0.9rem;
+      cursor: pointer; display: flex; align-items: center; gap: 5px;
+    }
+    .add-cart {
+      background: var(--text); color: var(--white); border: none;
+      font-weight: 700; cursor: pointer; font-size: 0.85rem; letter-spacing: 0.05em;
     }
 
-    .mobile-menu.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .mobile-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      text-align: center;
-    }
-
-    .mobile-nav a {
-      font-size: 1.5rem;
-      font-weight: 700;
-      text-decoration: none;
-      color: var(--text);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .mobile-menu.active .mobile-nav a {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .mobile-menu.active .mobile-nav a:nth-child(1) { transition-delay: 0.1s; }
-    .mobile-menu.active .mobile-nav a:nth-child(2) { transition-delay: 0.2s; }
-    .mobile-menu.active .mobile-nav a:nth-child(3) { transition-delay: 0.3s; }
-    .mobile-menu.active .mobile-nav a:nth-child(4) { transition-delay: 0.4s; }
-
-    .sr-only {
+    /* Grid View */
+    .grid-view {
       position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
+      inset: 0;
+      display: none;
+      background: var(--panel);
+      padding: 120px 40px 40px;
+      overflow-y: auto;
+      z-index: 90;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .grid-item {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .grid-item:hover { transform: translateY(-5px); }
+    .grid-item svg { margin-bottom: 20px; }
+
+    .card[data-view="grid"] .grid-view { display: block; }
+    .card[data-view="grid"] .hero, 
+    .card[data-view="grid"] .bottom-bar { display: none; }
+
+    @media (max-width: 1024px) {
+      .hamburger { display: flex; }
+      .side-nav { display: none; }
+      .top-row { left: 20px; right: 20px; }
+      .view-toggle { top: 65px; }
+      .bottom-bar { grid-template-columns: 1fr; height: auto; width: 100%; }
+      .bar-block { border-right: none; border-bottom: 1px solid #eee; padding: 20px; }
+      .details-overlay { padding: 40px 20px; }
+      .details-content { grid-template-columns: 1fr; gap: 40px; }
+      .hero-copy { font-size: 15vw; }
     }
   </style>
 </head>
 <body>
-  <main class="card">
+  <div class="mobile-overlay" id="mobileOverlay">
+    <a href="index.html">Home</a>
+    <a href="glasses.html">Glasses</a>
+    <a href="sunglasses.html">Sunglasses</a>
+    <a href="contact-lenses.html" style="font-weight: 800;">Contact Lenses</a>
+  </div>
+
+  <div class="details-overlay" id="detailsOverlay">
+    <div class="details-close" onclick="toggleDetails()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </div>
+    <div class="details-content">
+      <div class="details-image" id="detailsImg">
+        <svg viewBox="0 0 100 100" width="200" height="200"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.8)"/></svg>
+      </div>
+      <div class="details-info">
+        <h2 id="detailsTitle">Moist Daily</h2>
+        <span class="price" id="detailsPrice">Rs. 450</span>
+        <p id="detailsDesc">Ultra-breathable lenses designed for all-day hydration. Featuring LACREON® technology to keep moisture in and irritation out.</p>
+        <div class="specs-grid">
+          <div class="spec-item"><label>Usage</label><span>Daily Disposable</span></div>
+          <div class="spec-item"><label>Base Curve</label><span>8.5mm / 9.0mm</span></div>
+          <div class="spec-item"><label>Diameter</label><span>14.2mm</span></div>
+          <div class="spec-item"><label>Water Content</label><span>58%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="card" id="pageCard" data-view="slide">
     <header class="top-row">
-      <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">eyepointoptic</a>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12" class="line-middle"></line>
-          <line x1="3" y1="6" x2="21" y2="6" class="line-top"></line>
-          <line x1="3" y1="18" x2="21" y2="18" class="line-bottom"></line>
-        </svg>
-      </button>
+      <a href="index.html" class="logo">eyepointoptic</a>
+      <div class="header-right">
+        <a href="cart.html" style="color: inherit; text-decoration: none; display: flex; align-items: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        </a>
+        <button class="hamburger" id="hamburgerBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+      </div>
     </header>
 
-    <div class="mobile-menu" id="mobileMenu">
-      <nav class="mobile-nav">
-        <a href="index.html">Home</a>
-        <a href="glasses.html">Glasses</a>
-        <a href="sunglasses.html">Sunglasses</a>
-        <a href="contact-lenses.html">Contact Lenses</a>
-      </nav>
+    <div class="view-toggle">
+      <button class="toggle-btn active" id="btnSlide">Slide</button>
+      <button class="toggle-btn" id="btnGrid">Grid</button>
     </div>
 
     <nav class="side-nav">
@@ -295,9 +350,9 @@
     </nav>
 
     <section class="hero">
-      <div class="hero-copy">HYDRATE</div>
+      <div class="hero-copy" id="heroText">HYDRATE</div>
       <div class="product-wrap">
-        <svg viewBox="0 0 100 100" width="200" height="200">
+        <svg viewBox="0 0 100 100" width="280" height="280">
           <circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
           <ellipse cx="50" cy="45" rx="35" ry="30" fill="rgba(255,255,255,0.4)"/>
         </svg>
@@ -305,33 +360,95 @@
     </section>
 
     <footer class="bottom-bar">
-      <strong class="product-name">Moist Daily</strong>
-      <span class="price">£45 / pack</span>
-      <button class="add-cart">Add to Cart</button>
+      <div class="bar-block"><strong class="product-name" id="prodName">Moist Daily</strong></div>
+      <div class="bar-block"><span class="price" id="prodPrice">Rs. 450</span></div>
+      <div class="bar-block"><button class="btn-details" onclick="toggleDetails()">Product Details <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button></div>
+      <button class="add-cart" onclick="addToCart()">ADD TO CART</button>
     </footer>
+
+    <section class="grid-view">
+      <div class="grid-container" id="gridContainer"></div>
+    </section>
   </main>
 
-  <h1 class="sr-only">eyepointoptic contact lenses page</h1>
-
   <script>
-    // Mobile Menu Toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
+    const products = [
+      { name: "Moist Daily", price: "Rs. 450", desc: "Ultra-breathable daily disposable lenses." },
+      { name: "Acuvue Oasis", price: "Rs. 550", desc: "Two-week lenses for challenging environments." },
+      { name: "Biofinity", price: "Rs. 400", desc: "Monthly lenses with Aquaform® Technology." }
+    ];
 
-    if (hamburger && mobileMenu) {
-      hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
-      });
+    let currentIdx = 0;
+    const card = document.getElementById('pageCard');
+
+    function toggleMenu() {
+      document.getElementById('hamburgerBtn').classList.toggle('active');
+      document.getElementById('mobileOverlay').classList.toggle('active');
+    }
+
+    function toggleDetails() {
+      const overlay = document.getElementById('detailsOverlay');
+      overlay.classList.toggle('active');
+      if (overlay.classList.contains('active')) {
+        const p = products[currentIdx];
+        document.getElementById('detailsTitle').textContent = p.name;
+        document.getElementById('detailsPrice').textContent = p.price;
+        document.getElementById('detailsDesc').textContent = p.desc;
+      }
+    }
+
+    function selectProduct(idx) {
+      currentIdx = idx;
+      const p = products[idx];
+      document.getElementById('prodName').textContent = p.name;
+      document.getElementById('prodPrice').textContent = p.price;
+      document.getElementById('heroText').textContent = p.name === "Moist Daily" ? "HYDRATE" : p.name.toUpperCase();
+      card.dataset.view = 'slide';
+      document.getElementById('btnSlide').classList.add('active');
+      document.getElementById('btnGrid').classList.remove('active');
+    }
+
+    document.getElementById('btnSlide').onclick = () => selectProduct(currentIdx);
+    document.getElementById('btnGrid').onclick = () => {
+      card.dataset.view = 'grid';
+      document.getElementById('btnGrid').classList.add('active');
+      document.getElementById('btnSlide').classList.remove('active');
+    };
+
+    const grid = document.getElementById('gridContainer');
+    products.forEach((p, i) => {
+      const item = document.createElement('div');
+      item.className = 'grid-item';
+      item.onclick = () => selectProduct(i);
+      item.innerHTML = `<svg viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" fill="#eee"/></svg><p><strong>${p.name}</strong></p><p>${p.price}</p>`;
+      grid.appendChild(item);
+    });
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
       
-      mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          hamburger.classList.remove('active');
-          mobileMenu.classList.remove('active');
-          document.body.style.overflow = '';
-        });
+      setTimeout(() => toast.classList.add('show'), 100);
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 600);
+      }, 3000);
+    }
+
+    function addToCart() {
+      const p = products[currentIdx];
+      const cart = JSON.parse(localStorage.getItem('eyepointCart')) || [];
+      cart.push({
+        name: p.name,
+        price: p.price,
+        image: "https://via.placeholder.com/150?text=Lens",
+        category: 'Contact Lenses'
       });
+      localStorage.setItem('eyepointCart', JSON.stringify(cart));
+      showToast('Added to Bag!');
     }
   </script>
 </body>
