@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>EyePoint Optics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #EDE8E1;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Mobile menu */
+        #mobileMenu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        #mobileMenu.open { transform: translateX(0); }
+
+        /* Carousel */
+        .model-img {
+            transition: opacity 0.5s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .model-img.active { opacity: 1; }
+
+        /* Desktop-only elements */
+        @media (min-width: 768px) {
+            body { overflow: hidden; height: 100vh; }
+            
+            .bg-blob {
+                position: absolute;
+                top: -8%; right: -10%;
+                width: 60%; aspect-ratio: 1/1;
+                background-color: #8B7355;
+                border-radius: 50%;
+                z-index: 0;
+                transition: background-color 0.6s;
+            }
+
+            .outline-text {
+                font-family: 'Bebas Neue', sans-serif;
+                color: transparent;
+                -webkit-text-stroke: 1.8px rgba(255,255,255,0.35);
+                font-size: 17vw;
+                font-weight: 400;
+                letter-spacing: 0.06em;
+                line-height: 1;
+                white-space: nowrap;
+                user-select: none;
+            }
+
+            .model-container {
+                position: absolute;
+                top: 0; left: 36%; right: 0; bottom: 0;
+                z-index: 20;
+                pointer-events: none;
+            }
+
+            .model-img {
+                position: absolute;
+                bottom: 0; left: 50%;
+                transform: translateX(-50%);
+                height: 96%; width: auto;
+                object-fit: contain;
+            }
+        }
+
+        /* Mobile layout */
+        @media (max-width: 767px) {
+            body {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            main {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+            }
+
+            .bg-blob {
+                position: fixed;
+                bottom: -30%; right: -30%;
+                width: 120vw; height: 120vw;
+                background-color: #8B7355;
+                border-radius: 50%;
+                z-index: 0;
+                transition: background-color 0.6s;
+            }
+
+            .model-container {
+                order: 1;
+                position: relative;
+                width: 100%;
+                min-height: 45vh;
+                max-height: 50vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 20;
+                padding: 1rem;
+            }
+
+            .model-img {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                object-position: center;
+            }
+
+            .product-card-wrapper {
+                order: 2;
+                position: relative;
+                z-index: 30;
+            }
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Brown blob -->
+    <div class="bg-blob" id="blob"></div>
+
+    <!-- ROUNDED watermark (desktop only) -->
+    <div class="hidden md:block absolute top-[52%] left-[38%] -translate-y-1/2 z-10 pointer-events-none">
+        <h1 class="outline-text uppercase">Rounded</h1>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed md:absolute top-0 left-0 w-full z-50 bg-[#EDE8E1]/95 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none">
+        <div class="flex justify-between items-center px-4 md:px-14 py-4 md:py-7">
+            <!-- Logo -->
+            <a href="optic.html" class="flex items-center gap-2 flex-shrink-0">
+                <div class="w-9 h-9 md:w-[42px] md:h-[42px] bg-[#E57A44] rounded-full flex items-center justify-center">
+                    <i data-lucide="eye" class="w-5 h-5 md:w-[22px] md:h-[22px] text-white"></i>
+                </div>
+                <div class="flex flex-col leading-none">
+                    <span class="text-base md:text-[1.15rem] font-extrabold text-[#3A2E28]">EyePoint</span>
+                    <span class="text-[6px] md:text-[7px] font-bold text-[#9c8f85] tracking-[0.35em] uppercase mt-0.5">Optics</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex gap-10">
+                <a href="glasses.html" class="text-[10px] font-bold tracking-[0.25em] uppercase text-[#3A2E28] hover:opacity-60 transition">Glasses</a>
+                <a href="#" class="text-[10px] font-bold tracking-[0.25em] uppercase text-[#3A2E28] hover:opacity-60 transition">Sunglasses</a>
+                <a href="#" class="text-[10px] font-bold tracking-[0.25em] uppercase text-[#3A2E28] hover:opacity-60 transition">Contact Lenses</a>
+            </nav>
+
+            <!-- Desktop Icons -->
+            <div class="hidden md:flex items-center gap-6">
+                <i data-lucide="search" class="w-4 h-4 text-[#3A2E28] cursor-pointer"></i>
+                <span class="text-[10px] font-bold tracking-[0.25em] uppercase text-[#3A2E28] cursor-pointer">Account</span>
+                <i data-lucide="menu" class="w-5 h-5 text-[#3A2E28] cursor-pointer"></i>
+            </div>
+
+            <!-- Mobile Icons -->
+            <div class="flex md:hidden items-center gap-4">
+                <i data-lucide="search" class="w-4 h-4 text-[#3A2E28] cursor-pointer"></i>
+                <i data-lucide="shopping-bag" class="w-4 h-4 text-[#3A2E28] cursor-pointer"></i>
+                <button onclick="toggleMenu()" class="w-8 h-8 flex items-center justify-center">
+                    <i data-lucide="menu" class="w-5 h-5 text-[#3A2E28]"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden fixed top-0 right-0 w-[75%] h-full bg-white z-[100] shadow-2xl">
+        <div class="flex flex-col h-full">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <span class="text-lg font-bold text-[#3A2E28]">Menu</span>
+                <button onclick="toggleMenu()">
+                    <i data-lucide="x" class="w-6 h-6 text-[#3A2E28]"></i>
+                </button>
+            </div>
+            <nav class="flex flex-col p-6 gap-6">
+                <a href="glasses.html" class="text-sm font-bold tracking-wider uppercase text-[#3A2E28] py-3 border-b border-gray-100">Glasses</a>
+                <a href="#" class="text-sm font-bold tracking-wider uppercase text-[#3A2E28] py-3 border-b border-gray-100">Sunglasses</a>
+                <a href="#" class="text-sm font-bold tracking-wider uppercase text-[#3A2E28] py-3 border-b border-gray-100">Contact Lenses</a>
+                <a href="#" class="text-sm font-bold tracking-wider uppercase text-[#3A2E28] py-3">Account</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-16 md:pt-0 md:h-screen md:overflow-hidden">
+
+        <!-- Model Image Container -->
+        <div class="model-container">
+            <img id="model1" src="../assets/FRAME1.png" alt="Model 1" class="model-img active"/>
+            <img id="model2" src="../assets/frame2_clean.png" alt="Model 2" class="model-img"/>
+            <img id="model3" src="../assets/frame3.png" alt="Model 3" class="model-img"/>
+        </div>
+
+        <!-- Carousel Arrows -->
+        <div class="absolute top-[22%] md:top-[50%] left-1/2 md:left-[40%] -translate-x-1/2 md:-translate-x-1/2 -translate-y-1/2 z-40 flex gap-2 md:gap-3">
+            <button onclick="changeSlide(-1)" class="w-10 h-10 md:w-9 md:h-9 bg-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition">
+                <i data-lucide="chevron-left" class="w-5 h-5 md:w-4 md:h-4 text-gray-400"></i>
+            </button>
+            <button onclick="changeSlide(1)" class="w-10 h-10 md:w-9 md:h-9 bg-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition">
+                <i data-lucide="chevron-right" class="w-5 h-5 md:w-4 md:h-4 text-gray-400"></i>
+            </button>
+        </div>
+
+        <!-- Product Card -->
+        <div class="product-card-wrapper">
+            <div class="relative md:absolute md:top-[15%] md:left-14 z-30 mx-4 md:mx-0 mt-4 mb-6 md:my-0 md:w-[320px] bg-white rounded-3xl md:rounded-[28px] shadow-2xl md:shadow-[0_25px_60px_rgba(0,0,0,0.09)] p-6 md:p-8">
+            
+            <!-- Product Image -->
+            <div class="w-full h-28 md:h-[130px] flex items-center justify-center mb-5 md:mb-6">
+                <img id="productImg"
+                     src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                     alt="Glasses"
+                     class="w-[85%] h-full object-contain mix-blend-multiply transition-opacity duration-400"/>
+            </div>
+
+            <div id="cardContent" class="transition-opacity duration-400">
+                <!-- Price -->
+                <span id="cardPrice" class="block text-[10px] md:text-[11px] font-semibold text-[#5c4a38] mb-2">800Rs</span>
+
+                <!-- Title -->
+                <h2 id="cardTitle" class="font-extrabold text-[#1c1410] leading-tight mb-3" style="font-size: clamp(1.25rem, 4vw, 1.35rem);">
+                    Leopard Print<br>Glasses Round
+                </h2>
+
+                <!-- Accent Line -->
+                <div class="w-9 h-0.5 bg-[#c4a882] rounded-full mb-4"></div>
+
+                <!-- Description -->
+                <p id="cardDesc" class="text-[8.5px] md:text-[9.5px] text-[#7a6e66] leading-relaxed mb-5 md:mb-6">
+                    Designed for men and women who have a fashionable air about them. These are sure to be the best accessories to Ring in the summers. Material used: Light weight cellulose acetate, beta-titanium material.
+                </p>
+
+                <!-- Button -->
+                <button onclick="addToCart()"
+                        class="w-full bg-[#6e5040] hover:bg-[#5c4030] text-white font-bold text-[11px] md:text-xs tracking-wider uppercase rounded-xl md:rounded-[14px] py-3 md:py-3.5 transition-colors active:scale-[0.98]">
+                    Add to cart
+                </button>
+            </div>
+        </div>
+        </div>
+
+        <!-- Made in Italy (desktop only) -->
+        <div class="hidden md:block absolute bottom-[8%] right-[2.5%] z-40">
+            <span class="text-[8.5px] font-bold tracking-[0.3em] uppercase text-white opacity-70 [writing-mode:vertical-lr] rotate-180">Made in Italy</span>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative md:absolute bottom-0 left-0 w-full z-50 flex justify-between items-center px-4 md:px-14 py-5 md:py-7 border-t md:border-t-0 border-gray-200/50">
+        <div class="flex gap-5 md:gap-6">
+            <i data-lucide="facebook" class="w-4 h-4 text-[#3A2E28] opacity-50 cursor-pointer hover:opacity-100 transition"></i>
+            <i data-lucide="twitter" class="w-4 h-4 text-[#3A2E28] opacity-50 cursor-pointer hover:opacity-100 transition"></i>
+            <i data-lucide="instagram" class="w-4 h-4 text-[#3A2E28] opacity-50 cursor-pointer hover:opacity-100 transition"></i>
+        </div>
+
+        <div class="hidden md:flex flex-col items-center gap-1 cursor-pointer">
+            <span class="text-[9px] font-semibold tracking-[0.3em] uppercase text-[#8a7e76]">Scroll</span>
+            <i data-lucide="arrow-down" class="w-3.5 h-3.5 text-[#8a7e76]"></i>
+        </div>
+
+        <div class="flex items-center gap-1 text-[10px] md:text-[11px] font-bold tracking-wider text-[#3A2E28] md:text-white cursor-pointer opacity-70 md:opacity-80">
+            <span>En</span>
+            <i data-lucide="chevron-down" class="w-3 h-3"></i>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const slides = [
+            {
+                model: '../assets/FRAME1.png',
+                product: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: '800Rs',
+                title: 'Leopard Print<br>Glasses Round',
+                desc: 'Designed for men and women who have a fashionable air about them. These are sure to be the best accessories to Ring in the summers. Material used: Light weight cellulose acetate, beta-titanium material.',
+                blob: '#8B7355'
+            },
+            {
+                model: '../assets/frame2_clean.png',
+                product: 'https://images.unsplash.com/photo-1508296695146-257a814070b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: '1200Rs',
+                title: 'Classic Oval<br>Tortoise Frame',
+                desc: 'A timeless oval silhouette crafted from premium tortoise acetate. Lightweight and durable, these frames offer all-day comfort with a sophisticated vintage-inspired look.',
+                blob: '#7A6548'
+            },
+            {
+                model: '../assets/frame3.png',
+                product: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: '950Rs',
+                title: 'Modern Square<br>Black Edition',
+                desc: 'Bold square frames with a sleek black finish. Perfect for making a statement while maintaining professional elegance. Crafted from premium acetate with spring hinges.',
+                blob: '#6B5D52'
+            }
+        ];
+
+        let current = 0;
+
+        function changeSlide(dir) {
+            const next = (current + dir + slides.length) % slides.length;
+            const card = document.getElementById('cardContent');
+            const productImg = document.getElementById('productImg');
+            
+            card.style.opacity = '0';
+            productImg.style.opacity = '0';
+
+            const models = [document.getElementById('model1'), document.getElementById('model2'), document.getElementById('model3')];
+            const currentModel = models[current];
+            const nextModel = models[next];
+
+            currentModel.classList.remove('active');
+            nextModel.classList.add('active');
+
+            document.getElementById('blob').style.backgroundColor = slides[next].blob;
+
+            setTimeout(() => {
+                const s = slides[next];
+                document.getElementById('cardPrice').textContent = s.price;
+                document.getElementById('cardTitle').innerHTML = s.title;
+                document.getElementById('cardDesc').textContent = s.desc;
+                productImg.src = s.product;
+                productImg.onload = () => { productImg.style.opacity = '1'; };
+                card.style.opacity = '1';
+            }, 350);
+
+            current = next;
+        }
+
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('open');
+        }
+
+        function addToCart() {
+            alert('Added to cart: ' + slides[current].title.replace('<br>', ' '));
+        }
+
+        // Close mobile menu on outside click
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobileMenu');
+            if (menu.classList.contains('open') && !menu.contains(e.target) && !e.target.closest('[onclick="toggleMenu()"]')) {
+                menu.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

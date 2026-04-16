@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eyepointoptic | Contact Lenses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #d0e1f9;
+      --panel: #f0f4f8;
+      --text: #1a2a44;
+      --text-soft: #4a5a74;
+      --text-muted: #7a8a94;
+      --white: #ffffff;
+      --shadow: 0 28px 45px rgba(26, 42, 68, 0.15);
+      --bar-shadow: 0 16px 35px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(140deg, #f0f4f8 0%, var(--panel) 48%, #e0e8f0 100%);
+      color: var(--text);
+      font-family: "Sora", sans-serif;
+      overflow-x: hidden;
+    }
+
+    .card {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(140deg, #f0f4f8 0%, var(--panel) 45%, #e0e8f0 100%);
+      overflow: hidden;
+      animation: card-in 0.8s ease both;
+      isolation: isolate;
+    }
+
+    .top-row {
+      position: absolute;
+      left: 30px;
+      right: 28px;
+      top: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 5;
+    }
+
+    .logo {
+      letter-spacing: -0.07em;
+      font-size: 2.15rem;
+      font-weight: 600;
+      text-transform: lowercase;
+      line-height: 1;
+    }
+
+    .side-nav {
+      position: absolute;
+      left: 30px;
+      top: 222px;
+      display: grid;
+      gap: 12px;
+      z-index: 5;
+    }
+
+    .side-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.73rem;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+      transition: color 0.25s ease;
+    }
+
+    .side-nav a.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero {
+      height: 100%;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .hero-copy {
+      position: absolute;
+      top: 46%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(3rem, 10vw, 8rem);
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 800;
+      white-space: nowrap;
+      z-index: 1;
+    }
+
+    .product-wrap {
+      z-index: 4;
+      animation: product-in 1s ease both;
+    }
+
+    .bottom-bar {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      width: min(900px, 90vw);
+      height: 80px;
+      background: var(--white);
+      box-shadow: var(--bar-shadow);
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      border-radius: 40px;
+      z-index: 8;
+    }
+
+    .product-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .price {
+      margin-left: auto;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .add-cart {
+      margin-left: 40px;
+      padding: 12px 30px;
+      background: var(--text);
+      color: var(--white);
+      border: none;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes product-in {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <header class="top-row">
+      <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">eyepointoptic</a>
+    </header>
+
+    <nav class="side-nav">
+      <a href="glasses.html">Glasses</a>
+      <a href="sunglasses.html">Sunglasses</a>
+      <a class="active" href="contact-lenses.html">Contact Lenses</a>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-copy">HYDRATE</div>
+      <div class="product-wrap">
+        <svg viewBox="0 0 100 100" width="200" height="200">
+          <circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+          <ellipse cx="50" cy="45" rx="35" ry="30" fill="rgba(255,255,255,0.4)"/>
+        </svg>
+      </div>
+    </section>
+
+    <footer class="bottom-bar">
+      <strong class="product-name">Moist Daily</strong>
+      <span class="price">£45 / pack</span>
+      <button class="add-cart">Add to Cart</button>
+    </footer>
+  </main>
+
+  <h1 class="sr-only">eyepointoptic contact lenses page</h1>
+</body>
+</html>

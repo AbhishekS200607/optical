@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eyepointoptic | Vision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f1ee;
+      --accent: #846a55;
+      --gold: #c5a021;
+      --text: #1a1a1a;
+      --text-soft: #555555;
+      --white: #ffffff;
+      --glass: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: "Sora", sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-shape {
+      position: fixed;
+      top: -10%;
+      right: -5%;
+      width: 50vw;
+      height: 120vh;
+      background: linear-gradient(135deg, #e6e2df 0%, #dcd7d2 100%);
+      border-radius: 40% 60% 40% 60% / 30% 30% 70% 70%;
+      z-index: -1;
+      filter: blur(60px);
+      animation: morph 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes morph {
+      0% { border-radius: 40% 60% 40% 60% / 30% 30% 70% 70%; }
+      100% { border-radius: 60% 40% 60% 40% / 70% 70% 30% 30%; }
+    }
+
+    .hero-watermark {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 22vw;
+      font-weight: 800;
+      color: rgba(0, 0, 0, 0.03);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      pointer-events: none;
+      z-index: 0;
+      white-space: nowrap;
+      transition: opacity 0.5s ease;
+    }
+
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      text-transform: lowercase;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 48px;
+    }
+
+    nav a {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 120px;
+      position: relative;
+      height: 100vh;
+    }
+
+    .product-details {
+      padding: 0 10% 0 15%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .product-title {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+      transition: opacity 0.4s ease;
+    }
+
+    .product-card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      padding: 40px;
+      max-width: 440px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+      animation: slide-up 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .price-tag {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gold); /* Gold color applied here */
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .description {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--text-soft);
+      margin-bottom: 40px;
+      min-height: 100px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--text);
+      color: var(--white);
+      border: none;
+      padding: 20px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: #000;
+      transform: translateY(-2px);
+    }
+
+    .slider-controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .control-btn {
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(0,0,0,0.1);
+      background: var(--white);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text);
+    }
+
+    .control-btn:hover {
+      background: var(--text);
+      color: var(--white);
+      border-color: var(--text);
+    }
+
+    .visual-side {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .model-image {
+      height: 95vh;
+      width: auto;
+      object-fit: contain;
+      z-index: 5;
+      filter: drop-shadow(0 30px 60px rgba(0,0,0,0.1));
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      position: absolute;
+      bottom: 0;
+      opacity: 0;
+      transform: translateX(50px);
+    }
+
+    .model-image.active {
+      opacity: 1;
+      transform: translateX(0);
+      position: relative;
+    }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1024px) {
+      header { padding: 24px; }
+      nav { display: none; }
+      main { grid-template-columns: 1fr; padding-top: 80px; height: auto; }
+      .product-details { padding: 40px 24px; order: 2; }
+      .product-card { max-width: 100%; padding: 32px 24px; }
+      .visual-side { height: 50vh; order: 1; }
+      .model-image { height: 100%; }
+      .hero-watermark { font-size: 30vw; top: 25%; }
+      footer { padding: 40px 24px; flex-direction: column; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-shape" id="bgShape"></div>
+  <div class="hero-watermark" id="watermark">Vision</div>
+
+  <div class="app-container">
+    <header>
+      <a href="index.html" class="logo">eyepointoptic</a>
+      
+      <nav>
+        <a href="glasses.html">Collection</a>
+        <a href="#">Stories</a>
+        <a href="#">Ateliers</a>
+        <a href="#">Support</a>
+      </nav>
+
+      <div style="display: flex; gap: 24px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+    </header>
+
+    <main>
+      <section class="product-details">
+        <span class="badge" id="productBadge">Best Seller</span>
+        <h1 class="product-title" id="productTitle">Elevate Your<br>Perspective.</h1>
+        
+        <div class="product-card">
+          <span class="price-tag" id="productPrice">Rs. 800</span>
+          <p class="description" id="productDesc">
+            The Leopard Round series combines heritage craftsmanship with a bold, contemporary silhouette.
+          </p>
+          
+          <div class="cta-row">
+            <button class="btn-primary">Add to Bag</button>
+          </div>
+
+          <div class="slider-controls">
+            <button class="control-btn" id="prevBtn" aria-label="Previous">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            <button class="control-btn" id="nextBtn" aria-label="Next">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="visual-side" id="visualSide">
+        <!-- Images Managed by JS -->
+      </section>
+    </main>
+
+    <footer style="padding: 40px 60px; display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+      <div style="display: flex; gap: 32px;">
+        <a href="#" style="color: var(--text-soft); text-decoration: none; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;">Instagram</a>
+        <a href="#" style="color: var(--text-soft); text-decoration: none; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;">Vimeo</a>
+      </div>
+      <div style="font-size: 0.65rem; font-weight: 600; color: var(--text-soft);">© 2026 EYEPONTOPTIC</div>
+    </footer>
+  </div>
+
+  <script>
+    const products = [
+      {
+        title: "Leopard Print<br>Round Series",
+        price: "Rs. 800",
+        desc: "Heritage craftsmanship meets a bold, contemporary silhouette. Meticulously sculpted from premium Italian acetate.",
+        image: "../assets/FRAME1.png",
+        watermark: "Vision",
+        badge: "Best Seller"
+      },
+      {
+        title: "Classic Frame<br>Design 02",
+        price: "Rs. 1200",
+        desc: "A timeless aesthetic redefined for the modern minimalist. Lightweight, durable, and effortlessly sophisticated.",
+        image: "../assets/frame2_clean.png",
+        watermark: "Style",
+        badge: "New Arrival"
+      },
+      {
+        title: "Architectural<br>Frame 03",
+        price: "Rs. 1500",
+        desc: "Precision engineering meets avant-garde design. A structural masterpiece crafted for those who see differently.",
+        image: "../assets/frame3.png",
+        watermark: "Focus",
+        badge: "Premium"
+      }
+    ];
+
+    let currentIdx = 0;
+    const titleEl = document.getElementById('productTitle');
+    const priceEl = document.getElementById('productPrice');
+    const descEl = document.getElementById('productDesc');
+    const badgeEl = document.getElementById('productBadge');
+    const watermarkEl = document.getElementById('watermark');
+    const visualSide = document.getElementById('visualSide');
+
+    products.forEach((p, i) => {
+      const img = document.createElement('img');
+      img.src = p.image;
+      img.alt = p.title.replace('<br>', ' ');
+      img.className = `model-image ${i === 0 ? 'active' : ''}`;
+      img.id = `img-${i}`;
+      visualSide.appendChild(img);
+    });
+
+    function updateSlider(idx) {
+      const p = products[idx];
+      [titleEl, priceEl, descEl, badgeEl, watermarkEl].forEach(el => el.style.opacity = '0');
+      document.querySelectorAll('.model-image').forEach(img => img.classList.remove('active'));
+      document.getElementById(`img-${idx}`).classList.add('active');
+
+      setTimeout(() => {
+        titleEl.innerHTML = p.title;
+        priceEl.textContent = p.price;
+        descEl.textContent = p.desc;
+        badgeEl.textContent = p.badge;
+        watermarkEl.textContent = p.watermark;
+        [titleEl, priceEl, descEl, badgeEl, watermarkEl].forEach(el => el.style.opacity = '1');
+      }, 400);
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      currentIdx = (currentIdx + 1) % products.length;
+      updateSlider(currentIdx);
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      currentIdx = (currentIdx - 1 + products.length) % products.length;
+      updateSlider(currentIdx);
+    });
+  </script>
+</body>
+</html>
