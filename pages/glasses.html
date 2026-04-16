@@ -529,7 +529,7 @@
       }
 
       .side-nav {
-        top: 188px;
+        display: none;
       }
 
       .hero {
@@ -556,7 +556,89 @@
       .bar-block:nth-child(2) {
         border-bottom: 1px solid #ececec;
       }
+      
+      .hamburger {
+        display: block;
+      }
     }
+
+    /* Hamburger Menu Styles */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1100;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .hamburger svg line {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+    }
+
+    .hamburger.active .line-middle {
+      opacity: 0;
+    }
+
+    .hamburger.active .line-top {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .hamburger.active .line-bottom {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--panel);
+      z-index: 1050;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .mobile-menu.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      text-align: center;
+    }
+
+    .mobile-nav a {
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .mobile-menu.active .mobile-nav a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-menu.active .mobile-nav a:nth-child(1) { transition-delay: 0.1s; }
+    .mobile-menu.active .mobile-nav a:nth-child(2) { transition-delay: 0.2s; }
+    .mobile-menu.active .mobile-nav a:nth-child(3) { transition-delay: 0.3s; }
+    .mobile-menu.active .mobile-nav a:nth-child(4) { transition-delay: 0.4s; }
 
     @media (max-width: 700px) {
       .view-toggle {
@@ -587,16 +669,7 @@
       }
 
       .side-nav {
-        top: 70px;
-        left: 16px;
-        right: 16px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px 12px;
-      }
-
-      .side-nav a {
-        font-size: 0.66rem;
+        display: none;
       }
 
       .hero {
@@ -689,8 +762,24 @@
             <rect x="6" y="9" width="12" height="11" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.9"></rect>
           </svg>
         </button>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12" class="line-middle"></line>
+            <line x1="3" y1="6" x2="21" y2="6" class="line-top"></line>
+            <line x1="3" y1="18" x2="21" y2="18" class="line-bottom"></line>
+          </svg>
+        </button>
       </div>
     </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <nav class="mobile-nav">
+        <a href="index.html">Home</a>
+        <a href="glasses.html">Glasses</a>
+        <a href="sunglasses.html">Sunglasses</a>
+        <a href="contact-lenses.html">Contact Lenses</a>
+      </nav>
+    </div>
 
     <div class="view-toggle" role="group" aria-label="Change product view">
       <button class="toggle-btn active" id="slideViewBtn" type="button" data-view="slide" aria-pressed="true">Slide</button>
@@ -903,6 +992,26 @@
     renderGridProducts(PRODUCTS);
     applySlideProduct(currentSlideIndex);
     setView("slide");
+
+    // Mobile Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+      });
+      
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      });
+    }
   </script>
 </body>
 </html>

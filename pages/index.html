@@ -234,6 +234,25 @@
       align-items: flex-end;
       justify-content: center;
       overflow: hidden;
+      touch-action: pan-y;
+    }
+
+    .mobile-controls {
+      display: none;
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      justify-content: space-between;
+      padding: 0 15px;
+      z-index: 20;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .mobile-controls .control-btn {
+      pointer-events: auto;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .model-image {
@@ -264,13 +283,97 @@
       header { padding: 24px; }
       nav { display: none; }
       main { grid-template-columns: 1fr; padding-top: 80px; height: auto; }
-      .product-details { padding: 40px 24px; order: 2; }
-      .product-card { max-width: 100%; padding: 32px 24px; }
-      .visual-side { height: 50vh; order: 1; }
-      .model-image { height: 100%; }
+      .product-details { padding: 20px 24px 60px; order: 2; }
+      .product-card { max-width: 100%; padding: 32px 24px; margin-top: -40px; }
+      .visual-side { height: 60vh; order: 1; }
+      .mobile-controls { display: flex; }
+      .slider-controls { display: none; }
+      .model-image { height: 90%; }
       .hero-watermark { font-size: 30vw; top: 25%; }
       footer { padding: 40px 24px; flex-direction: column; gap: 32px; }
+      
+      .hamburger {
+        display: block;
+      }
     }
+
+    /* Hamburger Menu Styles */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1100;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .hamburger svg line {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+    }
+
+    .hamburger.active .line-middle {
+      opacity: 0;
+    }
+
+    .hamburger.active .line-top {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .hamburger.active .line-bottom {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      z-index: 1050;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .mobile-menu.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      text-align: center;
+    }
+
+    .mobile-nav a {
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .mobile-menu.active .mobile-nav a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-menu.active .mobile-nav a:nth-child(1) { transition-delay: 0.1s; }
+    .mobile-menu.active .mobile-nav a:nth-child(2) { transition-delay: 0.2s; }
+    .mobile-menu.active .mobile-nav a:nth-child(3) { transition-delay: 0.3s; }
+    .mobile-menu.active .mobile-nav a:nth-child(4) { transition-delay: 0.4s; }
   </style>
 </head>
 <body>
@@ -288,16 +391,35 @@
         <a href="#">Support</a>
       </nav>
 
-      <div style="display: flex; gap: 24px;">
+      <div style="display: flex; gap: 24px; align-items: center;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12" class="line-middle"></line>
+            <line x1="3" y1="6" x2="21" y2="6" class="line-top"></line>
+            <line x1="3" y1="18" x2="21" y2="18" class="line-bottom"></line>
+          </svg>
+        </button>
       </div>
     </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <nav class="mobile-nav">
+        <a href="glasses.html">Collection</a>
+        <a href="#">Stories</a>
+        <a href="#">Ateliers</a>
+        <a href="#">Support</a>
+      </nav>
+    </div>
 
     <main>
       <section class="product-details">
         <span class="badge" id="productBadge">Best Seller</span>
         <h1 class="product-title" id="productTitle">Elevate Your<br>Perspective.</h1>
+        <br>
+        <br>
         
         <div class="product-card">
           <span class="price-tag" id="productPrice">Rs. 800</span>
@@ -310,10 +432,10 @@
           </div>
 
           <div class="slider-controls">
-            <button class="control-btn" id="prevBtn" aria-label="Previous">
+            <button class="control-btn prev-trigger" aria-label="Previous">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
             </button>
-            <button class="control-btn" id="nextBtn" aria-label="Next">
+            <button class="control-btn next-trigger" aria-label="Next">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
           </div>
@@ -321,6 +443,14 @@
       </section>
 
       <section class="visual-side" id="visualSide">
+        <div class="mobile-controls">
+          <button class="control-btn prev-trigger" aria-label="Previous">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          </button>
+          <button class="control-btn next-trigger" aria-label="Next">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
         <!-- Images Managed by JS -->
       </section>
     </main>
@@ -395,15 +525,66 @@
       }, 400);
     }
 
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      currentIdx = (currentIdx + 1) % products.length;
-      updateSlider(currentIdx);
+    document.querySelectorAll('.next-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentIdx = (currentIdx + 1) % products.length;
+        updateSlider(currentIdx);
+      });
     });
 
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      currentIdx = (currentIdx - 1 + products.length) % products.length;
-      updateSlider(currentIdx);
+    document.querySelectorAll('.prev-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentIdx = (currentIdx - 1 + products.length) % products.length;
+        updateSlider(currentIdx);
+      });
     });
+
+    // Touch Swipe Support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    visualSide.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    visualSide.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, {passive: true});
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      if (touchEndX < touchStartX - swipeThreshold) {
+        // Swipe Left -> Next
+        currentIdx = (currentIdx + 1) % products.length;
+        updateSlider(currentIdx);
+      }
+      if (touchEndX > touchStartX + swipeThreshold) {
+        // Swipe Right -> Prev
+        currentIdx = (currentIdx - 1 + products.length) % products.length;
+        updateSlider(currentIdx);
+      }
+    }
+
+    // Mobile Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+      });
+      
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      });
+    }
   </script>
 </body>
 </html>
