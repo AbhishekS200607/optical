@@ -1,9 +1,9 @@
 [build]
-  publish = "pages"
+  publish = "."
 
 [[redirects]]
   from = "/"
-  to = "/index.html"
+  to = "/pages/index.html"
   status = 200
 
 [[redirects]]
